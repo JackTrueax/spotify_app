@@ -17,6 +17,12 @@ function formatMs(time_in_ms) {
   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 }
 
+/* 
+updates table body with track information
+params: 
+  tableBody - element from html page
+  tracklist - trackList data from API response
+*/
 function updateTableBody(tableBody, trackList) {
   tableBody.innerHTML = ""
   for (const track of trackList) {
@@ -48,7 +54,8 @@ function updateTableBody(tableBody, trackList) {
 
 }
 
-function retrieveTracks(timeRangeSlug, domNumber, domPeriod) {
+// request top 10 tracks from spotify API
+function retrieveTracks(timeRangeSlug) {
   $.ajax({
     url: `https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=${timeRangeSlug}`,
     headers: {
@@ -71,6 +78,7 @@ function retrieveTracks(timeRangeSlug, domNumber, domPeriod) {
   });
 }
 
+// request user's current queue from spotify API
 function getQueue() {
   $.ajax({
     url: `https://api.spotify.com/v1/me/player/queue`,
@@ -96,9 +104,8 @@ function getQueue() {
   });
 }
 
+// get access tokens from the URL
 let params = getHashParams();
-console.log(params);
-
 let access_token = params.access_token,
   client = params.client,
   error = params.error;
@@ -124,7 +131,7 @@ if (error) {
   }
 }
 
-
+// assign functions to top tracks buttons
 document.getElementById("short_term").addEventListener(
   "click",
   function () {
@@ -146,6 +153,7 @@ document.getElementById("long_term").addEventListener(
   },
   false
 );
+// assign function to current queue button
 document.getElementById("queue_button").addEventListener(
   "click",
   function () {
